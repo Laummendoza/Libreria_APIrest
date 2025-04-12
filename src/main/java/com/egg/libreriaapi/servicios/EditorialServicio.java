@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.egg.libreriaapi.entidades.Autor;
 import com.egg.libreriaapi.entidades.Editorial;
 import com.egg.libreriaapi.excepciones.MyException;
 import com.egg.libreriaapi.repositorios.EditorialRepositorio;
@@ -18,7 +18,8 @@ public class EditorialServicio {
 
     @Autowired
     private EditorialRepositorio editorialRepositorio;
-//CREAR EDITORIAL
+
+    // CREAR EDITORIAL
     @Transactional
     public void crearEditorial(String nombre) throws MyException {
 
@@ -27,7 +28,8 @@ public class EditorialServicio {
         editorial.setNombre(nombre);// Seteo el atributo, con el valor recibido como parámetro
         editorialRepositorio.save(editorial);// Persisto el dato en mi BBDD
     }
-//LISTAR EDITORIALES
+
+    // LISTAR EDITORIALES
     @Transactional(readOnly = true)
     public List<Editorial> listarEditoriales() {
 
@@ -36,7 +38,8 @@ public class EditorialServicio {
         editoriales = editorialRepositorio.findAll();
         return editoriales;
     }
-//MODIFICAR EDITORIAL
+
+    // MODIFICAR EDITORIAL
     @Transactional
     public void modificarEditorial(Integer idEditorial, String nombre) throws MyException {
         validar(nombre);
@@ -51,7 +54,8 @@ public class EditorialServicio {
             throw new MyException("No se encontró una editorial con el ID especificado");
         }
     }
-//ELIMINAR EDITORIAL
+
+    // ELIMINAR EDITORIAL
     @Transactional
     public void eliminar(Integer idEditorial) throws MyException {
         Optional<Editorial> editorialOpt = editorialRepositorio.findById(idEditorial);
@@ -61,16 +65,36 @@ public class EditorialServicio {
             throw new MyException("La editorial con el ID especificado no existe");
         }
     }
-//BUSCAR EDITORIAL POR ID
+
+    // BUSCAR EDITORIAL POR ID
     @Transactional(readOnly = true)
     public Editorial getOne(Integer idEditorial) {
         return editorialRepositorio.findById(idEditorial).orElse(null);
     }
-//VALIDAR NOMBRE EDITORIAL
+
+    // VALIDAR NOMBRE EDITORIAL
     private void validar(String nombre) throws MyException {
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new MyException("El nombre de la editorial no puede ser nulo o estar vacío");
         }
     }
+
+    // LISTAR EDITORIALES activas
+    @Transactional(readOnly = true)
+    public List<Editorial> editorialesActivas() {
+
+        return editorialRepositorio.findByAltaTrue();
+    }
+    // LISTAR EDITORIALES inactivas
+    @Transactional(readOnly = true)
+    public List<Editorial> editorialesInactivas() {
+
+        return editorialRepositorio.findByAltaFalse();
+    }
+
+
+
+    
+
 
 }
