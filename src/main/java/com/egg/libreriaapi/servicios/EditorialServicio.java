@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.egg.libreriaapi.entidades.Autor;
 import com.egg.libreriaapi.entidades.Editorial;
 import com.egg.libreriaapi.excepciones.MyException;
 import com.egg.libreriaapi.repositorios.EditorialRepositorio;
@@ -90,5 +91,10 @@ public class EditorialServicio {
 
         return editorialRepositorio.findByAltaFalse();
     }
+
+
+
+    
+
 
 }

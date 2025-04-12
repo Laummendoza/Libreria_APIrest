@@ -11,6 +11,7 @@ import com.egg.libreriaapi.entidades.Editorial;
 public interface EditorialRepositorio extends JpaRepository<Editorial, Integer> {
     List<Editorial> findByAltaTrue();
     List<Editorial> findByAltaFalse();
+    List<Editorial> findByNombre(String nombre);
     //Optional<Editorial> findById(UUID idEditorial);
 
 }
