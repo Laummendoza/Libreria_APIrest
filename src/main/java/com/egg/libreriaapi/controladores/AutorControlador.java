@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.egg.libreriaapi.entidades.Autor;
-import com.egg.libreriaapi.entidades.Editorial;
+
+
 import com.egg.libreriaapi.servicios.AutorServicio;
 
 
@@ -39,6 +40,7 @@ public class AutorControlador {
         }
     }
 
+
    @PatchMapping("/modificar")
     public ResponseEntity<Void> modificarAutor(@RequestParam String nombre, @RequestParam Integer id) {
         try {
@@ -48,6 +50,7 @@ public class AutorControlador {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @GetMapping("/listar")
     public ResponseEntity<Object> listarAutores() {
@@ -59,6 +62,7 @@ public class AutorControlador {
         }
     }
 
+
     @GetMapping("/buscar")
     public ResponseEntity<Object> buscarAutor(@RequestParam Integer idAutor) {
         try {
@@ -66,6 +70,8 @@ public class AutorControlador {
             return new ResponseEntity<>(autor,HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+    
+   
     }
 }
