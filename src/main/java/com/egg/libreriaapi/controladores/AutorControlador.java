@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.egg.libreriaapi.entidades.Autor;
+
+
 import com.egg.libreriaapi.servicios.AutorServicio;
 
 
@@ -38,6 +40,18 @@ public class AutorControlador {
         }
     }
 
+
+   @PatchMapping("/modificar")
+    public ResponseEntity<Void> modificarAutor(@RequestParam String nombre, @RequestParam Integer id) {
+        try {
+            autorServicio.modificarAutor(nombre, id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
     @GetMapping("/listar")
     public ResponseEntity<Object> listarAutores() {
         try {
@@ -48,14 +62,16 @@ public class AutorControlador {
         }
     }
 
-    
-    @PatchMapping("/modificar")
-    public ResponseEntity<Void> modificarAutor(@RequestParam String nombre, @RequestParam Integer id) {
+
+    @GetMapping("/buscar")
+    public ResponseEntity<Object> buscarAutor(@RequestParam Integer idAutor) {
         try {
-            autorServicio.modificarAutor(nombre, id);
-            return ResponseEntity.ok().build();
+            Autor autor = autorServicio.getOne(idAutor); // Llama al servicio para obtener la lista de autores
+            return new ResponseEntity<>(autor,HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+    
+   
     }
 }
