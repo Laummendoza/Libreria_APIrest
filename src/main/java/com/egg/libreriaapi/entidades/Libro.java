@@ -20,18 +20,16 @@ public class Libro {
     private Integer ejemplares;
    
     @Column(name = "alta_libro")
-    private Boolean alta = true;                       
+    private boolean alta;                       
     
      
-    @ManyToOne
-    @JoinColumn(name = "id_autor")
-    private Autor autor;
+    @ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "id_autor")
+private Autor autor;
 
-    
-    @ManyToOne
-    @JoinColumn(name = "id_editorial")
-    private Editorial editorial;
-
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "id_editorial")
+private Editorial editorial;
 
     public Libro(Integer idLibro, String titulo, Integer ejemplares, Boolean alta, Autor autor, Editorial editorial) {
         this.idLibro = idLibro;
@@ -102,7 +100,7 @@ public class Libro {
 
 
     public void setAlta(Boolean alta) {
-        this.alta = true;
+        this.alta = alta;
     }
 
 
