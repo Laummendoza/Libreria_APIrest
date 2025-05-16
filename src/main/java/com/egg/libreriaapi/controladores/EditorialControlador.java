@@ -8,10 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.egg.libreriaapi.entidades.Editorial;
+import com.egg.libreriaapi.modelos.EditorialCreateDTO;
 import com.egg.libreriaapi.servicios.EditorialServicio;
 
 @RestController
@@ -22,12 +24,13 @@ public class EditorialControlador {
 
 
     @PostMapping("/crear")
-    public ResponseEntity<Object> crearEditorial(String nombre) {
+    public ResponseEntity<Object> crearEditorial(@RequestBody EditorialCreateDTO editorialCreateDTO) {
         try {
-            editorialServicio.crearEditorial(nombre);
-            return new ResponseEntity<>(HttpStatus.OK);
+            editorialServicio.crearEditorial(editorialCreateDTO);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"Algun dato no es correcto o es nulo, revisar.\"}");
         }
     }
 
@@ -73,3 +76,5 @@ public class EditorialControlador {
         }
     }
 }
+
+
