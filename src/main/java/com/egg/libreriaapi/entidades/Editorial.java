@@ -14,7 +14,7 @@ public class Editorial {
     private Integer idEditorial;
 
     @Column(name = "alta_editorial")
-    private Boolean alta = true;
+    private Boolean alta;
     
     @Column(name = "nombre_editorial")
     private String nombre;
@@ -36,7 +36,7 @@ public class Editorial {
         return alta;
     }
     public void setAlta(Boolean alta) {
-        this.alta = true;
+        this.alta =alta;
 
     }    
     public String getNombre() {
