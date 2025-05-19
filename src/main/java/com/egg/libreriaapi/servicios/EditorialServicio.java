@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.egg.libreriaapi.entidades.Autor;
 import com.egg.libreriaapi.entidades.Editorial;
 import com.egg.libreriaapi.excepciones.MyException;
+import com.egg.libreriaapi.modelos.EditorialCreateDTO;
+import com.egg.libreriaapi.modelos.LibroCreateDTO;
 import com.egg.libreriaapi.repositorios.EditorialRepositorio;
 
 @Service
@@ -19,14 +21,18 @@ public class EditorialServicio {
     @Autowired
     private EditorialRepositorio editorialRepositorio;
 
+
+    
+
     // CREAR EDITORIAL
     @Transactional
-    public void crearEditorial(String nombre) throws MyException {
-
-        validar(nombre);
-        Editorial editorial = new Editorial();// Instancio un objeto del tipo Editorial
-        editorial.setNombre(nombre);// Seteo el atributo, con el valor recibido como parámetro
-        editorialRepositorio.save(editorial);// Persisto el dato en mi BBDD
+    public void crearEditorial(EditorialCreateDTO editorialCreateDTO) {
+//  quede en esta linea de CODIGO!!!!!!
+        
+        Editorial editorialNueva = new Editorial();// Instancio un objeto del tipo Editorial
+        editorialNueva.setNombre(editorialCreateDTO.getNombre());
+        editorialNueva.setAlta(editorialCreateDTO.isAlta());// Seteo el atributo, con el valor recibido como parámetro
+        editorialRepositorio.save(editorialNueva);// Persisto el dato en mi BBDD
     }
 
     // LISTAR EDITORIALES

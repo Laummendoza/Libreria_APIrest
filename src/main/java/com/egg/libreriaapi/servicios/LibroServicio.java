@@ -12,10 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import com.egg.libreriaapi.modelos.LibroCreateDTO;
+import com.egg.libreriaapi.modelos.LibroListarActivosDTO;
 
 @Service
 public class LibroServicio {
+
+    @Autowired
+    private AutorServicio autorServicio;
+
+    @Autowired
+    private EditorialServicio editorialServicio;
 
     @Autowired
     private LibroRepositorio libroRepositorio;
@@ -24,41 +31,26 @@ public class LibroServicio {
     @Autowired
     private EditorialRepositorio editorialRepositorio;
 //CREAR LIBRO
+
     @Transactional
-    public void crearLibro(Integer idLibro, String titulo, Integer ejemplares, Boolean alta, Integer idAutor,
-            Integer idEditorial) throws MyException {
-
-        validar( titulo, ejemplares, idAutor, idEditorial);
-
-        Autor autor = autorRepositorio.findById(idAutor).orElse(null);
-        Editorial editorial = editorialRepositorio.findById(idEditorial).orElse(null);
-
-        if (autor == null) {
-            throw new MyException("El autor especificado no existe.");
+    public void crearLibro(LibroCreateDTO libroCreateDTO) {
+        Libro libroNvo = new Libro();
+        libroNvo.setIdLibro(libroCreateDTO.getIdLibro());
+        libroNvo.setTitulo(libroCreateDTO.getTitulo());
+        libroNvo.setEjemplares(libroCreateDTO.getEjemplares());
+        libroNvo.setAlta(libroCreateDTO.isAlta());
+        Autor autor = autorServicio.getOne(libroCreateDTO.getIdAutor());
+        if (autor != null) {
+            libroNvo.setAutor(autor);
         }
-
-        if (editorial == null) {
-            throw new MyException("La editorial especificada no existe.");
+        Editorial editorial = editorialServicio.getOne(libroCreateDTO.getIdEditorial());
+        if (editorial != null) {
+            libroNvo.setEditorial(editorial);
         }
-        
-
-        Libro libro = new Libro();
-        libro.setIdLibro(idLibro);
-        libro.setTitulo(titulo);
-        libro.setEjemplares(ejemplares);
-        //establecer True por defecto ( si no se hace esto, se inicializa alta=false por defecto)
-        if (libro.getAlta() == null) {
-            autor.setAlta(true);
-        } else {
-            autor.setAlta(alta);
-        }
-        libro.setAlta(alta);
-        libro.setAutor(autor);
-        libro.setEditorial(editorial);
-
-        libroRepositorio.save(libro);
+        libroRepositorio.save(libroNvo);
     }
 //LISTAR LIBROS
+
     @Transactional(readOnly = true)
     public List<Libro> listarLibros() {
 
@@ -68,13 +60,13 @@ public class LibroServicio {
         return libros;
     }
 //MODIFICAR LIBRO
+
     @Transactional
     public void modificarLibro(Integer idLibro, String titulo, Integer ejemplares, Integer idAutor, Integer idEditorial)
             throws MyException {
 
         validar(titulo, ejemplares, idAutor, idEditorial);
 
-        
         Optional<Libro> respuesta = libroRepositorio.findById(idLibro);
         Optional<Autor> respuestaAutor = autorRepositorio.findById(idAutor);
         Optional<Editorial> respuestaEditorial = editorialRepositorio.findById(idEditorial);
@@ -100,8 +92,6 @@ public class LibroServicio {
         libroRepositorio.save(libro);
     }
 
-
-    
 //BUSCAR POR ID
     @Transactional(readOnly = true)
     public Libro getOne(Integer idLibro) {
@@ -112,7 +102,6 @@ public class LibroServicio {
     private void validar(String titulo, Integer ejemplares, Integer idAutor, Integer idEditorial)
             throws MyException {
 
-        
         if (titulo == null || titulo.trim().isEmpty()) {
             throw new MyException("El título no puede ser nulo o estar vacío.");
         }
@@ -127,5 +116,12 @@ public class LibroServicio {
             throw new MyException("El ID de la editorial no puede ser nulo o estar vacío.");
         }
     }
+
+//BUSCAR LIBROS ACTIVOS
+    @Transactional(readOnly = true)
+    public List<LibroListarActivosDTO> listarLibrosActivos() {
+        return libroRepositorio.encontrarActivos();
+    }
+
 
 }
