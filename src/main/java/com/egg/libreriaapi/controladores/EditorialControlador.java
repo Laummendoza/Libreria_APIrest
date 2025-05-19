@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.egg.libreriaapi.entidades.Editorial;
+
 import com.egg.libreriaapi.modelos.EditorialCreateDTO;
+
+
 import com.egg.libreriaapi.servicios.EditorialServicio;
 
 @RestController
@@ -31,6 +34,48 @@ public class EditorialControlador {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("{\"Algun dato no es correcto o es nulo, revisar.\"}");
+        }
+    }
+
+    @GetMapping("/listar")
+    public ResponseEntity<Object> listarEditoriales() {
+        try {
+            List<Editorial> editoriales = editorialServicio.listarEditoriales(); // Llama al servicio para obtener la lista de editoriales
+            return new ResponseEntity<>(editoriales,HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/listar/altaTrue")
+    public ResponseEntity<Object> editorialesActivas() {
+        try {
+            List<Editorial> editoriales = editorialServicio.editorialesActivas(); // Llama al servicio para obtener la lista de editoriales activas
+            return new ResponseEntity<>(editoriales,HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/listar/altaFalse")
+    public ResponseEntity<Object> editorialesInactivas() {
+        try {
+            List<Editorial> editoriales = editorialServicio.editorialesInactivas(); // Llama al servicio para obtener la lista de editoriales inactivas
+            return new ResponseEntity<>(editoriales,HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    
+
+    @PatchMapping("/modificar")
+    public ResponseEntity<Object> modificarEditorial(Integer idEditorial, String nombre) {
+        try {
+            editorialServicio.modificarEditorial(idEditorial, nombre);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
